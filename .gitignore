@@ -1,0 +1,6 @@
+.DS_Store
+.env
+.mcp.json
+.claude/
+.agent-skills/
+node_modules/

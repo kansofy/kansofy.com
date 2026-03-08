@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOOM [MCP] — one connector. full context.</title>
+<style>
+@font-face {
+  font-family: 'LouizeDisplay';
+  src: url('LouizeDisplay/205TF-LouizeDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LouizeDisplay';
+  src: url('LouizeDisplay/205TF-LouizeDisplay-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #f4f0e8;
+  --blue: #4459a8;
+  --blue-dark: #2e3d85;
+  --gold: #c9a53a;
+  --gold-light: #dbb94a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  font-family: 'InterDisplay', 'Inter', sans-serif;
+  color: var(--blue);
+  overflow-x: hidden;
+}
+
+.font-display { font-family: 'LouizeDisplay', serif; }
+.font-display-i { font-family: 'LouizeDisplay', serif; font-style: italic; }
+.font-body { font-family: 'InterDisplay', 'Inter', sans-serif; }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.2rem 4vw 1.2rem 2.5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cream);
+}
+
+.nav-logo svg {
+  height: 30px;
+  width: auto;
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(1rem, 1.7vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: #111111;
+  opacity: 0.85;
+  text-decoration: none;
+  padding: 0.25em 0.4em;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+/* ── HERO ── */
+.hero {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-top: 60px;
+  background: var(--blue);
+  min-height: 85vh;
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+  padding: 3% 0 0 2%;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: clamp(4rem, 11vw, 12rem);
+  line-height: 0.88;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.5em;
+  font-family: 'LouizeDisplay', serif;
+  font-weight: 400;
+}
+
+.hero-tagline {
+  font-family: 'InterDisplay', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  line-height: 1;
+  color: var(--gold);
+  text-transform: lowercase;
+  position: absolute;
+  bottom: 30%;
+  left: 2%;
+}
+
+.hero-tagline em {
+  font-family: 'InterDisplay', sans-serif;
+  font-style: italic;
+}
+
+/* Noise texture overlay — gold speckles on transparent bg */
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-noise img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+/* Ground texture strip at bottom — 26% of hero height per Figma */
+.hero-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 26%;
+  background: url('images/ground.png') repeat-x;
+  background-size: auto 100%;
+  z-index: 2;
+}
+
+/* Flower — flex column, stem tip meets flower head bottom */
+.hero-flower {
+  position: absolute;
+  right: 2%;
+  bottom: 18%;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flower-head {
+  width: clamp(150px, 22vw, 320px);
+  transform-origin: center bottom;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -18%;
+}
+
+.flower-head img {
+  width: 100%;
+  display: block;
+}
+
+.flower-stem {
+  width: clamp(140px, 20vw, 280px);
+  position: relative;
+  z-index: 1;
+}
+
+.flower-stem img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Bees in hero */
+.hero-bee {
+  position: absolute;
+  z-index: 5;
+}
+
+.hero-bee img {
+  width: 100%;
+  display: block;
+}
+
+.hero-bee-1 {
+  right: 4%;
+  top: 5%;
+  width: clamp(24px, 3vw, 42px);
+  transform: scaleX(-1);
+}
+
+.hero-bee-2 {
+  right: 18%;
+  top: 12%;
+  width: clamp(22px, 2.5vw, 38px);
+  transform: rotate(15deg);
+}
+
+.hero-bee-3 {
+  right: 22%;
+  bottom: 38%;
+  width: clamp(22px, 2.8vw, 40px);
+  transform: scaleX(-1) rotate(-10deg);
+}
+
+
+/* Floating bee — follows scroll across the page */
+.floating-bee {
+  position: fixed;
+  left: 82%;
+  top: 18%;
+  z-index: 9999;
+  width: clamp(28px, 3.5vw, 48px);
+  height: auto;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.floating-bee img {
+  width: 100%;
+  display: block;
+}
+
+.hero-scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gold);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  z-index: 4;
+}
+
+.hero-scroll-cue::after {
+  content: '';
+  width: 1px;
+  height: 44px;
+  background: var(--gold);
+  animation: drip 1.9s ease-in-out infinite;
+}
+
+@keyframes drip {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  40%  { transform: scaleY(1); transform-origin: top; opacity: 0.8; }
+  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+}
+
+/* ── TRUTH + NOBODY ── */
+.truth-section {
+  padding: 12vh 4vw 10vh;
+  background: var(--cream);
+}
+
+.truth-content {
+  text-align: left;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.truth-line {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(2.5rem, 6.5vw, 7rem);
+  font-weight: 400;
+  line-height: 1.18;
+  color: var(--blue);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.truth-line .font-display-i {
+  font-size: 1.05em;
+}
+
+.truth-indent1 { padding-left: 18%; }
+.truth-indent2 { padding-left: 12%; }
+
+.truth-climax {
+  font-size: clamp(2.5rem, 6.5vw, 7rem);
+  font-weight: 400;
+  margin-top: 0.15em;
+  opacity: 0.55;
+}
+
+/* ── ASSEMBLY ANIMATION ── */
+.assembly-scroll {
+  position: relative;
+}
+
+.assembly-sticky {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  position: relative;
+}
+
+.fragment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  background: white;
+  border-radius: 12px;
+  padding: 9px;
+  box-shadow: 0 2px 20px rgba(68, 89, 168, 0.1);
+  will-change: transform, opacity;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue);
+}
+
+.fragment img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.assembly-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  z-index: 10;
+  pointer-events: none;
+  width: 100vw;
+  padding: 0 2vw;
+}
+
+.assembly-text h2 {
+  font-size: clamp(6rem, 14vw, 16rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--blue);
+}
+
+.assembly-text .font-display {
+  font-family: 'LouizeDisplay', serif;
+}
+
+.assembly-text .font-body {
+  font-family: 'InterDisplay', sans-serif;
+  font-weight: 600;
+  font-size: 0.65em;
+  letter-spacing: 0.06em;
+}
+
+/* ── CONNECTION ── */
+.connection-section {
+  padding: 14vh 6vw 8vh;
+}
+
+.connection-text {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 300;
+  line-height: 1.15;
+  max-width: 20ch;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.connection-text em {
+  font-family: 'LouizeDisplay', serif;
+  font-style: italic;
+}
+
+/* ── SYSTEMS ── */
+.systems-section {
+  padding: 8vh 6vw 14vh;
+}
+
+.systems-text {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 8rem);
+  line-height: 1.05;
+  font-weight: 300;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.systems-text em {
+  font-family: 'LouizeDisplay', serif;
+  font-style: italic;
+}
+
+.systems-text strong {
+  font-family: 'InterDisplay', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+}
+.systems-text .indent { padding-left: 2ch; }
+.systems-text .indent2 { padding-left: 5ch; }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 16vh 6vw 14vh;
+  text-align: center;
+  border-top: 1.5px solid rgba(68,89,168,0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0;
+  margin-bottom: 2.5rem;
+}
+
+.cta-headline {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 7rem);
+  font-weight: 600;
+  line-height: 0.9;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.cta-headline em {
+  font-family: 'LouizeDisplay', serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.cta-sub {
+  font-family: 'LouizeDisplay', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.6rem);
+  opacity: 0;
+  transform: translateY(20px);
+  margin-bottom: 3.5rem;
+  max-width: 34ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.cta-btn {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cream);
+  background: var(--blue);
+  padding: 1.1rem 3rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: background 0.25s;
+}
+
+.cta-btn:hover { background: var(--blue-dark); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 3rem 6vw;
+  border-top: 1px solid rgba(68,89,168,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  font-family: 'LouizeDisplay', serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.footer-logo em { font-style: italic; font-weight: 400; }
+
+.footer-note {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  opacity: 0.3;
+  text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .fragment { width: 36px; height: 36px; padding: 7px; border-radius: 9px; }
+  .hero { min-height: 70vh; }
+  .hero-content { padding: 4vh 5vw 0; }
+  .hero-ground { height: 18%; }
+  .floating-bee { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="159" height="33" viewBox="0 0 159 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.21079 3.2049C6.59904-0.183234 11.2577-1.01779 13.6161 1.34064C14.8926 2.61741 15.2305 4.56742 14.7372 6.6258C15.2775 5.4493 16.0777 4.28918 17.118 3.24885C20.5063-0.139265 25.1649-0.973835 27.5233 1.38459C29.8813 3.74319 29.0461 8.40171 25.6581 11.7899C24.7612 12.6867 23.7741 13.4023 22.7655 13.9295C24.6261 13.6104 26.3564 13.995 27.5233 15.1619C29.8813 17.5205 29.0462 22.179 25.6581 25.5672C22.2698 28.9554 17.6112 29.7899 15.2528 27.4315C13.9905 26.169 13.6428 24.2476 14.1122 22.2147C13.572 23.3824 12.7787 24.5344 11.7459 25.5672C8.35767 28.9555 3.69911 29.7899 1.34067 27.4315C-1.01774 25.073-0.183333 20.4145 3.20493 17.0262C4.13904 16.0921 5.1701 15.3527 6.2225 14.8201C4.3166 15.1767 2.53741 14.8021 1.34555 13.6102C-1.01245 11.2516-0.177313 6.59306 3.21079 3.2049Z" fill="#111111"/>
+      <path d="M142.88 32.923V29.4701H144.985C146.131 29.4701 146.67 28.8974 147.175 27.4994L147.832 25.7814L140.977 8.0957H145.474L148.741 17.3596C149.179 18.6734 149.617 19.9872 150.021 21.301C150.426 19.9872 150.847 18.6734 151.301 17.3596L154.552 8.0957H158.999L151.049 28.8132C149.988 31.5924 148.236 32.923 145.659 32.923H142.88Z" fill="#111111"/>
+      <path d="M139.815 8.09718V11.5164H136.194V25.8839H131.933V11.5164H128.732V8.09718H131.933V5.50328C131.933 2.43777 133.819 0.787109 137.339 0.787109H139.815V4.20634H138.181C136.733 4.20634 136.194 4.76217 136.194 6.21071V8.09718H139.815Z" fill="#111111"/>
+      <path d="M118.609 26.2886C113.371 26.2886 109.834 22.5325 109.834 17.0078C109.834 11.4831 113.371 7.69336 118.609 7.69336C123.848 7.69336 127.385 11.4831 127.385 17.0078C127.385 22.5325 123.848 26.2886 118.609 26.2886ZM118.609 22.7346C121.338 22.7346 123.073 20.5449 123.073 17.0078C123.073 13.4538 121.321 11.2473 118.609 11.2473C115.881 11.2473 114.129 13.437 114.129 17.0078C114.129 20.5618 115.864 22.7346 118.609 22.7346Z" fill="#111111"/>
+      <path d="M100.218 26.3061C95.8889 26.3061 92.6718 24.2175 92.4023 20.3941H96.5963C96.7816 22.129 98.028 23.1227 100.15 23.1227C102.205 23.1227 103.451 22.23 103.451 20.9668C103.451 19.8888 102.525 19.2656 101.026 18.9455L97.9943 18.3223C94.592 17.6149 92.8066 15.88 92.8066 13.1851C92.8066 9.91743 95.6194 7.71094 99.9649 7.71094C104.277 7.71094 107.224 9.98481 107.325 13.6398H103.334C103.3 12.0566 102.003 10.8944 100.066 10.8944C98.1964 10.8944 97.0511 11.8376 97.0511 13.0503C97.0511 14.1115 97.9269 14.7684 99.4091 15.0884L102.609 15.7453C106.13 16.4864 107.763 18.036 107.763 20.6467C107.763 24.1165 104.614 26.3061 100.218 26.3061Z" fill="#111111"/>
+      <path d="M77.7132 15.829V25.8846H73.4688V8.09785H77.6459V10.8265C78.8586 8.82212 80.6608 7.74414 83.1031 7.74414C86.8254 7.74414 89.4529 10.2033 89.4529 14.7679V25.8846H85.1916V15.4416C85.1916 12.8309 83.8778 11.4665 81.604 11.4665C79.3807 11.4665 77.7132 12.7972 77.7132 15.829Z" fill="#111111"/>
+      <path d="M60.2318 26.1709C56.6947 26.1709 54.084 24.3855 54.084 20.8315C54.084 16.7891 57.4021 15.7953 61.0739 15.4079C64.3752 15.0374 65.5037 14.9868 65.5037 13.7741V13.6394C65.5037 12.1234 64.291 11.0455 62.2529 11.0455C60.1812 11.0455 58.8001 12.1234 58.6822 13.6225H54.5893C54.7914 10.0854 57.6884 7.74414 62.3372 7.74414C66.969 7.74414 69.7145 10.0517 69.7145 13.7573V25.8846H65.5374V23.3749H65.47C64.6278 24.9582 63.1288 26.1709 60.2318 26.1709ZM61.276 23.0212C64.0552 23.0212 65.5205 21.3705 65.5205 19.2988V17.3786C64.9984 17.7155 63.3477 17.985 61.5961 18.2545C59.777 18.524 58.2274 19.1809 58.2274 20.7978C58.2274 22.1958 59.4233 23.0212 61.276 23.0212Z" fill="#111111"/>
+      <path d="M36.3145 25.8839V0.787109H40.5589V15.3062H40.6095L47.532 8.09718H52.6355L45.4098 15.7778L53.0734 25.8839H48.0036L42.1759 18.2706L40.5589 19.9381V25.8839H36.3145Z" fill="#111111"/>
+    </svg>
+  </a>
+  <div class="nav-links">
+    <a href="#">products</a>
+    <a href="#">philosophy</a>
+    <a href="#">design partnerships</a>
+    <a href="#">resources</a>
+    <a href="#">vitrine</a>
+    <a href="#">about</a>
+  </div>
+</nav>
+
+<!-- 1. HERO -->
+<div class="hero">
+  <div class="hero-noise"><img src="images/noise.png" alt=""></div>
+  <div class="hero-content">
+    <div class="hero-title">BLOOM [MCP]</div>
+    <div class="hero-tagline"><em>one</em> connector.<br><em>full</em> context.</div>
+  </div>
+  <div class="hero-flower">
+    <div class="flower-head" id="flowerHead">
+      <img src="images/flower-head.png" alt="Bloom flower">
+    </div>
+    <div class="flower-stem" id="flowerStem">
+      <img src="images/stem-tight.png" alt="">
+    </div>
+  </div>
+  <div class="hero-bee hero-bee-1"><img src="images/bee.png" alt=""></div>
+  <div class="hero-bee hero-bee-3"><img src="images/bee.png" alt=""></div>
+  <div class="floating-bee" id="floatingBee"><img src="images/bee.png" alt=""></div>
+  <div class="hero-ground"></div>
+  <div class="hero-scroll-cue">scroll</div>
+</div>
+
+
+<!-- 2. TRUTH + NOBODY -->
+<section class="truth-section">
+  <div class="truth-content">
+    <div class="truth-line" id="truthLine1">the truth about your business</div>
+    <div class="truth-line truth-indent1" id="truthLine2">lives in a <span class="font-display-i">dozen</span> places.</div>
+    <div class="truth-line" id="truthLine3">your <span class="font-display-i">people</span> have <span class="font-display-i">most</span> of the picture.</div>
+    <div class="truth-line truth-indent2" id="truthLine4">your <span class="font-display-i">systems</span> have <span class="font-display-i">some</span> of it.</div>
+    <div class="truth-line truth-climax" id="truthLine5"><span class="font-display-i">nobody</span> has all of it.</div>
+  </div>
+</section>
+
+<!-- 3. ICON CONVERGENCE → "BLOOM ASSEMBLES THE FULL PICTURE" -->
+<div class="assembly-scroll">
+  <div class="assembly-sticky">
+
+    <div class="fragment"><img src="icons-normalized/gmail.svg" alt="Gmail"></div>
+    <div class="fragment"><img src="icons-normalized/outlook.svg" alt="Outlook"></div>
+    <div class="fragment"><img src="icons-normalized/whatsapp.svg" alt="WhatsApp"></div>
+    <div class="fragment"><img src="icons-normalized/zoom.svg" alt="Zoom"></div>
+    <div class="fragment"><img src="icons-normalized/teams.svg" alt="Teams"></div>
+    <div class="fragment"><img src="icons-normalized/hubspot.svg" alt="HubSpot"></div>
+    <div class="fragment"><img src="icons-normalized/salesforce.svg" alt="Salesforce"></div>
+    <div class="fragment"><img src="icons-normalized/sap.svg" alt="SAP"></div>
+    <div class="fragment"><img src="icons-normalized/dynamics365.svg" alt="Dynamics 365"></div>
+    <div class="fragment"><img src="icons-normalized/quickbooks.svg" alt="QuickBooks"></div>
+    <div class="fragment"><img src="icons-normalized/xero.svg" alt="Xero"></div>
+    <div class="fragment"><img src="icons-normalized/word.svg" alt="Word"></div>
+    <div class="fragment"><img src="icons-normalized/excel.svg" alt="Excel"></div>
+    <div class="fragment"><img src="icons-normalized/powerpoint.svg" alt="PowerPoint"></div>
+    <div class="fragment"><img src="icons-normalized/pdf.svg" alt="PDF"></div>
+    <div class="fragment"><img src="icons-normalized/googledrive.svg" alt="Google Drive"></div>
+    <div class="fragment"><img src="icons-normalized/onedrive.svg" alt="OneDrive"></div>
+    <div class="fragment"><img src="icons-normalized/dropbox.svg" alt="Dropbox"></div>
+    <div class="fragment"><img src="icons-normalized/sharepoint.svg" alt="SharePoint"></div>
+    <div class="fragment"><img src="icons-normalized/docusign.svg" alt="DocuSign"></div>
+    <div class="fragment"><img src="icons-normalized/bloomberg.svg" alt="Bloomberg"></div>
+
+    <!-- Text overlay — appears after icons dissolve -->
+    <div class="assembly-text" id="assemblyText">
+      <h2>
+        <span class="font-display">BLOOM</span><br>
+        <span class="font-body">ASSEMBLES</span><br>
+        <span class="font-display">THE FULL</span><br>
+        <span class="font-display">PICTURE</span>
+      </h2>
+    </div>
+
+  </div>
+</div>
+
+<!-- 6. CONNECTION -->
+<section class="connection-section">
+  <p class="connection-text" id="connectionText">
+    bloom is a single connection point between <em>your</em> system:
+  </p>
+</section>
+
+<!-- 7. SYSTEMS -->
+<section class="systems-section">
+  <p class="systems-text" id="sysText">
+    <em>email,</em><br>
+    <span class="indent">your <em>ERP,</em></span><br>
+    <span class="indent">your <em>CRM —</em></span><br>
+    <span class="indent2">and the <em>AI</em></span><br>
+    <span class="indent2">you <em>already</em> use.</span>
+  </p>
+</section>
+
+<!-- 8. CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-eyebrow" id="ctaEye">BLOOM [MCP] — early access</div>
+  <h2 class="cta-headline" id="ctaHead">one connector.<br><em>full context.</em></h2>
+  <p class="cta-sub" id="ctaSub">Stop searching across a dozen places. Let Bloom assemble the full picture — so your AI actually knows your business.</p>
+  <a href="#" class="cta-btn" id="ctaBtn">request early access</a>
+</section>
+
+<!-- 9. FOOTER -->
+<footer>
+  <div class="footer-logo">BLOOM <em>[MCP]</em></div>
+  <div class="footer-note">&copy; 2026 Kansofy — bloom.mcp</div>
+</footer>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Accessibility: skip animations for users who prefer reduced motion
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  gsap.globalTimeline.timeScale(100);
+}
+
+// ── Helper: reveal on scroll ──
+function reveal(el, vars, trigger) {
+  gsap.to(el, {
+    ...vars,
+    scrollTrigger: {
+      trigger: trigger || el,
+      start: "top 82%",
+      toggleActions: "play none none none"
+    }
+  });
+}
+
+// ── Hero entrance ──
+gsap.from("nav", { y: -30, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.2 });
+gsap.from(".hero-title", { y: 50, opacity: 0, duration: 1.2, ease: "power3.out", delay: 0.3 });
+gsap.from(".hero-tagline", { y: 30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.6 });
+gsap.from(".hero-bee", { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", stagger: 0.15, delay: 1 });
+gsap.from("#flowerHead", { scale: 0, opacity: 0, duration: 1, ease: "back.out(1.7)", delay: 0.8, transformOrigin: "center bottom" });
+gsap.from("#flowerStem", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out", delay: 0.5 });
+
+// ── Floating Bee Animation ──
+const bee = document.getElementById("floatingBee");
+gsap.set(bee, { xPercent: -50, yPercent: -50 });
+
+// Continuous gentle floating (runs independently)
+gsap.to(bee, { y: "+=15", duration: 1.8, ease: "sine.inOut", repeat: -1, yoyo: true });
+gsap.to(bee, { x: "+=12", duration: 2.5, ease: "sine.inOut", repeat: -1, yoyo: true });
+gsap.to(bee, { rotation: 10, duration: 2, ease: "sine.inOut", repeat: -1, yoyo: true });
+
+// Bee scroll waypoints — flies across sections
+const beeTimeline = gsap.timeline({
+  scrollTrigger: {
+    trigger: "body",
+    start: "top top",
+    end: "bottom bottom",
+    scrub: 0.8,
+  }
+});
+
+// Start near the flower in hero
+beeTimeline.to(bee, { left: "78%", top: "20%", duration: 0.05 }, 0);
+// Fly to truth section
+beeTimeline.to(bee, { left: "88%", top: "28%", duration: 0.08, ease: "power2.inOut" }, 0.05);
+// Hover around icon convergence
+beeTimeline.to(bee, { left: "15%", top: "40%", duration: 0.1, ease: "power2.inOut" }, 0.15);
+// Fly to assembly text
+beeTimeline.to(bee, { left: "60%", top: "50%", duration: 0.1, ease: "power2.inOut" }, 0.30);
+// Fly toward connection section
+beeTimeline.to(bee, { left: "85%", top: "35%", duration: 0.1, ease: "power2.inOut" }, 0.50);
+// Settle near CTA
+beeTimeline.to(bee, { left: "80%", top: "55%", duration: 0.15, ease: "power1.inOut" }, 0.70);
+
+// ════════════════════════════════════════
+// TRUTH + NOBODY — scroll-triggered reveals
+// ════════════════════════════════════════
+document.querySelectorAll(".truth-line").forEach((line, i) => {
+  gsap.to(line, {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: line,
+      start: "top 85%",
+      toggleActions: "play none none none",
+    }
+  });
+});
+
+// ════════════════════════════════════════
+// ICON CONVERGENCE + ASSEMBLY TEXT
+// Compression → Release pattern
+// ════════════════════════════════════════
+const fragments = gsap.utils.toArray(".fragment");
+const fragSize = 48;
+
+// Use container-relative coordinates for positioning
+function getCenter() {
+  const el = document.querySelector('.assembly-sticky');
+  return { x: el.offsetWidth / 2, y: el.offsetHeight / 2 };
+}
+
+// Scatter starting positions — golden-angle distribution
+const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+const startPositions = fragments.map((_, i) => {
+  const angle = goldenAngle * i + (Math.random() - 0.5) * 0.4;
+  const radius = 160 + Math.random() * 180;
+  return {
+    xOffset: Math.cos(angle) * radius,
+    yOffset: Math.sin(angle) * radius,
+    rotation: (Math.random() - 0.5) * 25,
+  };
+});
+
+function positionFragments() {
+  const c = getCenter();
+  fragments.forEach((frag, i) => {
+    gsap.set(frag, {
+      x: c.x + startPositions[i].xOffset - fragSize / 2,
+      y: c.y + startPositions[i].yOffset - fragSize / 2,
+      rotation: startPositions[i].rotation,
+      opacity: 0.9,
+    });
+  });
+}
+positionFragments();
+
+// Subtle floating before scroll engages
+const floatingTweens = fragments.map((frag) => {
+  return gsap.to(frag, {
+    y: `+=${6 + Math.random() * 10}`,
+    x: `+=${(Math.random() - 0.5) * 6}`,
+    rotation: `+=${(Math.random() - 0.5) * 3}`,
+    duration: 2.5 + Math.random() * 2,
+    ease: "sine.inOut",
+    yoyo: true,
+    repeat: -1,
+    delay: Math.random() * 2,
+  });
+});
+
+gsap.set("#assemblyText", { opacity: 0, scale: 0.6, filter: "blur(20px)" });
+
+// Kill floating when scroll begins
+ScrollTrigger.create({
+  trigger: ".assembly-scroll",
+  start: "top 80%",
+  once: true,
+  onEnter: () => floatingTweens.forEach(tw => tw.kill()),
+});
+
+// Main scroll-driven timeline
+const assemblyTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".assembly-scroll",
+    start: "top top",
+    end: () => `+=${window.innerHeight * 6}`,
+    pin: ".assembly-sticky",
+    pinSpacing: true,
+    scrub: 2,
+    invalidateOnRefresh: true,
+  }
+});
+
+// Phase 1: Converge to loose orbit (0 → 3)
+fragments.forEach((frag, i) => {
+  const c = getCenter();
+  const angle = (Math.PI * 2 / fragments.length) * i;
+  const targetRadius = 50 + Math.random() * 30;
+  assemblyTl.to(frag, {
+    x: c.x + Math.cos(angle) * targetRadius - fragSize / 2,
+    y: c.y + Math.sin(angle) * targetRadius - fragSize / 2,
+    rotation: 0,
+    scale: 0.8,
+    duration: 3,
+    ease: "power2.inOut",
+  }, 0);
+});
+
+// Phase 2: COMPRESS — tighten to center (3 → 5) — BUILDS PRESSURE
+fragments.forEach((frag, i) => {
+  const c = getCenter();
+  const angle = (Math.PI * 2 / fragments.length) * i;
+  const tightRadius = 8 + Math.random() * 12;
+  assemblyTl.to(frag, {
+    x: c.x + Math.cos(angle) * tightRadius - fragSize / 2,
+    y: c.y + Math.sin(angle) * tightRadius - fragSize / 2,
+    scale: 0.4,
+    opacity: 0.5,
+    duration: 2,
+    ease: "power3.in",
+  }, 3);
+});
+
+// Phase 3: DISSOLVE — implode to single point (5 → 6.5)
+fragments.forEach((frag) => {
+  const c = getCenter();
+  assemblyTl.to(frag, {
+    x: c.x - fragSize / 2,
+    y: c.y - fragSize / 2,
+    scale: 0.05,
+    opacity: 0,
+    duration: 1.5,
+    ease: "power4.in",
+  }, 5);
+});
+
+// Phase 4: RELEASE — text racks into focus (6.5 → 9.5)
+assemblyTl.to("#assemblyText", {
+  opacity: 1,
+  scale: 1,
+  filter: "blur(0px)",
+  duration: 3,
+  ease: "power3.out",
+}, 6.5);
+
+// Phase 5: Hold for reading (9.5 → 12)
+assemblyTl.to({}, { duration: 2.5 });
+
+// Recalculate positions on resize
+ScrollTrigger.addEventListener("refreshInit", positionFragments);
+
+// ── CONNECTION ──
+reveal("#connectionText", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" });
+
+// ── SYSTEMS ──
+reveal("#sysText", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" });
+
+// ── CTA ──
+reveal("#ctaEye",  { opacity: 0.38, duration: 0.8 });
+reveal("#ctaHead", { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
+reveal("#ctaSub",  { opacity: 0.75, y: 0, duration: 0.9, ease: "power3.out", delay: 0.1 }, "#ctaSub");
+reveal("#ctaBtn",  { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay: 0.2 }, "#ctaBtn");
+
+</script>
+</body>
+</html>
