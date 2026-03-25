@@ -4,3 +4,5 @@
 .claude/
 .agent-skills/
 node_modules/
+.superpowers/
+.wrangler/

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOOM [MCP] by Kansofy — One Connector, Full Context</title>
+<meta name="description" content="BLOOM [MCP] is a single connection point between your systems, humans, and AI. Built by Kansofy for businesses that need the full picture.">
+<meta name="keywords" content="MCP, Model Context Protocol, AI connector, business integration, Kansofy, BLOOM">
+<meta name="author" content="Kansofy Inc.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://kansofy.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="BLOOM [MCP] — One Connector, Full Context">
+<meta property="og:description" content="A single connection point between your systems, humans, and AI. Nobody has the full picture — until now.">
+<meta property="og:url" content="https://kansofy.com/">
+<meta property="og:site_name" content="Kansofy">
+<meta property="og:image" content="https://kansofy.com/images/og-bloom.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BLOOM [MCP] — One Connector, Full Context">
+<meta name="twitter:description" content="A single connection point between your systems, humans, and AI.">
+<meta name="twitter:image" content="https://kansofy.com/images/og-bloom.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "BLOOM [MCP]",
+  "applicationCategory": "BusinessApplication",
+  "description": "A single connection point between your systems, humans, and AI via the Model Context Protocol.",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Kansofy Inc.",
+    "url": "https://kansofy.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Tel Aviv"
+    }
+  }
+}
+</script>
+
+<style>
+
+@font-face {
+  font-family: 'LouizeDisplay';
+  src: url('LouizeDisplay/205TF-LouizeDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LouizeDisplay';
+  src: url('LouizeDisplay/205TF-LouizeDisplay-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'InterDisplay';
+  src: url('thesis-standalone/fonts/InterDisplay-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+:root {
+  --cream: #fdfcf6;
+  --blue: #3D62A0;
+  --gold: #DBB35B;
+  --black: #111111;
+  --coral: #E3917A;
+  --teal: #6FAD9D;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  font-family: 'InterDisplay', 'Inter', sans-serif;
+  color: var(--blue);
+  overflow-x: hidden;
+}
+
+.accent { color: var(--coral); }
+.accent-teal { color: var(--teal); }
+
+nav {
+  position: relative;
+  z-index: 100;
+  padding: 0.6rem 2vw 0.6rem 1.5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cream);
+}
+.nav-logo svg { height: 30px; width: auto; display: block; }
+.nav-connect {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  font-weight: 400;
+  color: var(--blue);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 0;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.nav-connect .nav-text {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.nav-connect .nav-with {
+  font-family: 'InterDisplay', sans-serif;
+  font-weight: 500;
+  font-size: 0.81em;
+}
+.nav-connect .paren {
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.5;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  font-size: 1.1em;
+}
+.nav-connect:hover .paren-l { transform: translateX(-4px); opacity: 1; }
+.nav-connect:hover .paren-r { transform: translateX(4px); opacity: 1; }
+
+.hero {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+  background: var(--blue);
+  min-height: 85vh;
+}
+.hero-noise {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 1; overflow: hidden;
+}
+.hero-noise img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+.hero-content {
+  position: absolute; inset: 0;
+  padding: 3% 0 0 2%;
+  z-index: 2;
+}
+.hero-title {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(4rem, 16.9vw, 173px);
+  line-height: 0.855;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.hero-tagline {
+  font-family: 'InterDisplay', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 7.4vw, 76px);
+  line-height: 1.14;
+  color: var(--gold);
+  text-transform: lowercase;
+  position: absolute;
+  bottom: 30%; left: 2%;
+}
+.hero-tagline em { font-family: 'InterDisplay', sans-serif; font-style: italic; }
+.hero-ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 26%;
+  background: url('images/ground.png') repeat-x;
+  background-size: auto 100%;
+  z-index: 2;
+}
+.hero-flower {
+  position: absolute;
+  right: 2%; bottom: 18%;
+  z-index: 4;
+  display: flex; flex-direction: column; align-items: center;
+}
+.flower-head {
+  width: clamp(150px, 22vw, 320px);
+  transform-origin: center bottom;
+  position: relative; z-index: 2;
+  margin-bottom: -18%;
+}
+.flower-head img { width: 100%; display: block; }
+.flower-stem { width: clamp(140px, 20vw, 280px); position: relative; z-index: 1; }
+.flower-stem img { width: 100%; height: auto; display: block; }
+.hero-bee { position: absolute; z-index: 5; }
+.hero-bee img { width: 100%; display: block; animation: beePulse 2s ease-in-out infinite; }
+.hero-bee-1 { right: 4%; top: 5%; width: clamp(24px, 3vw, 42px); transform: scaleX(-1); }
+.hero-bee-3 { right: 22%; bottom: 38%; width: clamp(22px, 2.8vw, 40px); transform: scaleX(-1) rotate(-10deg); }
+@keyframes beePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ── CURSOR BEE ── */
+.cursor-bee {
+  position: fixed;
+  z-index: 999;
+  width: clamp(28px, 3vw, 44px);
+  pointer-events: none;
+}
+.cursor-bee img { width: 100%; display: block; }
+
+/* ── SPLITTYPE ── */
+.word { display: inline-block; }
+
+/* ── TRUTH ── */
+.truth-section {
+  padding: 12vh 4vw 4vh;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.truth-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+.truth-line {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(2.8rem, 11.3vw, 116px);
+  font-weight: 400;
+  line-height: 0.85;
+  color: var(--blue);
+  opacity: 0;
+  transform: translateY(20px);
+  margin-bottom: 0;
+}
+.truth-line em { font-style: italic; }
+.truth-indent { padding-left: 18%; }
+#truthLine3, #truthLine4 { margin-top: 0.25em; }
+.truth-clover {
+  position: absolute;
+  top: -5%; right: -2%;
+  width: clamp(200px, 30vw, 380px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── CLIMAX ── */
+.climax-section {
+  padding: 6vh 4vw 10vh;
+  text-align: center;
+  background: var(--cream);
+}
+.climax-text {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(2rem, 7.4vw, 76px);
+  line-height: 1.14;
+  color: var(--blue);
+  opacity: 0;
+  transform: translateY(20px);
+}
+.climax-text em { font-style: italic; }
+
+/* ── ICON CONVERGENCE ── */
+.assembly-scroll { position: relative; overflow: hidden; }
+.assembly-sticky {
+  height: 100vh; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream);
+  position: relative;
+}
+.assembly-clover {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 50vw, 550px);
+  opacity: 0.08;
+  pointer-events: none;
+}
+.fragment {
+  position: absolute; top: 0; left: 0;
+  width: 48px; height: 48px;
+  border-radius: 12px; padding: 9px;
+  will-change: transform, opacity, background-color;
+  pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.fragment img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
+.cat-comms { background: var(--coral); box-shadow: 0 2px 20px rgba(227, 145, 122, 0.25); }
+.cat-crm { background: var(--blue); box-shadow: 0 2px 20px rgba(61, 98, 160, 0.25); }
+.cat-erp { background: var(--gold); box-shadow: 0 2px 20px rgba(219, 179, 91, 0.25); }
+.cat-docs { background: #6FAD9D; box-shadow: 0 2px 20px rgba(111, 173, 157, 0.25); }
+.cat-storage { background: #8BAF9A; box-shadow: 0 2px 20px rgba(139, 175, 154, 0.25); }
+.assembly-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  z-index: 10; pointer-events: none;
+  width: 100vw; padding: 0 2vw;
+  text-align: center;
+}
+.assembly-text .line {
+  display: block;
+  font-size: 21vh;
+  line-height: 0.85;
+  color: var(--blue);
+}
+.assembly-text .line-serif { font-family: 'LouizeDisplay', serif; font-weight: 400; }
+.assembly-text .line-sans { font-family: 'InterDisplay', sans-serif; font-weight: 500; }
+
+/* ── CONNECTION MERGED ── */
+.connection-merged {
+  padding: 12vh 4vw 10vh;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.connection-merged .gen-flower {
+  position: absolute;
+  left: calc(50% + 426px);
+  top: 50%;
+  translate: -50% -50%;
+  width: clamp(400px, 55vw, 750px);
+  aspect-ratio: 1;
+  opacity: 1;
+  z-index: 0;
+}
+.connection-merged .gen-flower .petal {
+  position: absolute;
+  top: 50%; left: 50%;
+  translate: -50% -50%;
+}
+.connection-merged .gen-flower .petal svg { width: 100%; height: auto; display: block; }
+.connection-merged .gen-flower .petal-outer { width: 85%; }
+.connection-merged .gen-flower .petal-outer svg { fill: var(--gold); opacity: 0.2; }
+.connection-merged .gen-flower .petal-inner { width: 35%; }
+.connection-merged .gen-flower .petal-inner svg { fill: #6FAD9D; opacity: 0.08; }
+.merged-text {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(3rem, 11vw, 130px);
+  font-weight: 400;
+  line-height: 0.85;
+  color: var(--blue);
+  max-width: 1400px;
+  position: relative;
+  z-index: 2;
+}
+.merged-text em { font-family: 'LouizeDisplay', serif; font-style: italic; font-size: 1.15em; }
+.merged-line { display: block; }
+.merged-row { display: flex; align-items: baseline; gap: 0.3em; }
+.merged-amp { font-family: 'LouizeDisplay', serif; font-style: italic; opacity: 0.6; }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 10vh 4vw 10vh;
+  display: flex; align-items: center; justify-content: center;
+}
+.cta-btn {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 400;
+  color: var(--blue);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cta-btn .cta-text {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 8px;
+  text-decoration-thickness: 1.5px;
+  transition: font-size 0.4s ease, opacity 0.4s ease;
+}
+.cta-btn .cta-with {
+  font-family: 'InterDisplay', sans-serif;
+  font-weight: 500;
+  font-size: 0.81em;
+}
+.cta-btn .paren {
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.5;
+  transition: transform 0.4s ease, opacity 0.4s ease, font-size 0.4s ease;
+  font-size: 1.2em;
+}
+.cta-btn:hover .paren-l { transform: translateX(-10px); opacity: 1; }
+.cta-btn:hover .paren-r { transform: translateX(10px); opacity: 1; }
+.cta-btn:hover { letter-spacing: 1px; transition: letter-spacing 0.4s ease; }
+.cta-btn.expanded { gap: 12px; align-items: center; }
+.cta-btn.expanded .paren { font-size: 1em; opacity: 1; }
+.cta-btn.expanded .paren-l { transform: translateX(-4px); }
+.cta-btn.expanded .paren-r { transform: translateX(4px); }
+.cta-btn.expanded .cta-text {
+  font-family: 'LouizeDisplay', serif;
+  font-size: 0.45em;
+  font-style: italic;
+  text-decoration: none;
+  opacity: 0.6;
+}
+.cta-btn.done { white-space: nowrap; cursor: default; }
+.cta-btn.done .paren { opacity: 1; transform: none; }
+.cta-form {
+  align-items: center;
+  gap: 10px;
+}
+.cta-form { display: none; }
+.cta-form.visible { display: inline-flex !important; }
+.cta-input {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 400;
+  color: var(--blue);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--gold);
+  padding: 2px 0 4px;
+  outline: none;
+  width: clamp(180px, 25vw, 340px);
+  line-height: 1;
+}
+.cta-input::placeholder { color: var(--blue); opacity: 0.35; }
+.cta-submit {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  color: var(--gold);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  line-height: 1;
+}
+.cta-submit:hover { color: var(--coral); }
+.cta-confirmation {
+  font-family: 'LouizeDisplay', serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--teal);
+}
+
+/* ── FOOTER ── */
+.footer-ground {
+  width: 100%;
+  height: clamp(80px, 12vw, 133px);
+  background: url('images/ground-strip.png') repeat-x center;
+  background-size: auto 100%;
+}
+footer {
+  padding: 1.5rem 4vw;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--blue);
+}
+.footer-left, .footer-right {
+  font-family: 'InterDisplay', sans-serif;
+  font-size: clamp(0.7rem, 1.4vw, 0.875rem);
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--gold);
+}
+.footer-left {
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  /* Nav */
+  nav { padding: 0.5rem 4vw; }
+  .nav-logo svg { height: 24px; }
+  .nav-connect { font-size: 0.8rem; }
+
+  /* Hero */
+  .hero { min-height: 60vh; }
+  .hero-content { padding: 4vh 5vw 0; }
+  .hero-title { font-size: clamp(2.8rem, 14vw, 4.5rem); }
+  .hero-tagline { font-size: clamp(1.5rem, 6vw, 2.5rem); bottom: 28%; }
+  .hero-ground { height: 18%; }
+  .hero-flower { right: 0; bottom: 14%; }
+  .flower-head { width: clamp(90px, 18vw, 150px); }
+  .flower-stem { width: clamp(80px, 16vw, 140px); }
+  .hero-bee { display: none; }
+  .cursor-bee { display: none; }
+
+  /* Truth */
+  .truth-section { padding: 8vh 5vw 4vh; }
+  .truth-indent { padding-left: 0; }
+  .truth-line { font-size: clamp(1.6rem, 7.5vw, 2.8rem); line-height: 0.9; }
+  #truthLine3, #truthLine4 { margin-top: 0.3em; }
+  .truth-clover { width: clamp(120px, 40vw, 200px); top: -2%; right: -5%; }
+
+  /* Climax */
+  .climax-section { padding: 6vh 5vw 8vh; }
+  .climax-text { font-size: clamp(1.4rem, 6.5vw, 2.2rem); }
+
+  /* Icon convergence */
+  .fragment { width: 34px; height: 34px; padding: 6px; border-radius: 8px; }
+  .assembly-text .line { font-size: 12vw; }
+  .assembly-text .line-indent { padding-left: 0; }
+
+  /* Connection merged */
+  .connection-merged { padding: 8vh 5vw 8vh; min-height: auto; }
+  .connection-merged .gen-flower {
+    width: clamp(150px, 50vw, 230px);
+    left: 60%;
+    top: 50%;
+    opacity: 0.5;
+  }
+  .merged-text { font-size: clamp(1.6rem, 7.5vw, 2.8rem); line-height: 0.95; }
+
+  /* CTA */
+  .cta-section { padding: 6vh 5vw 8vh; }
+  .cta-btn { font-size: clamp(1.6rem, 7vw, 2.5rem); gap: 6px; }
+  .cta-btn .paren { font-size: 1.1em; }
+  .cta-btn.expanded { white-space: normal; flex-wrap: nowrap; gap: 6px; }
+  .cta-btn.expanded .cta-text { font-size: 0.4em; }
+  .cta-btn.expanded .paren { font-size: 0.9em; }
+  .cta-input { width: clamp(120px, 40vw, 220px); font-size: 0.9rem; }
+  .cta-submit { font-size: 1rem; }
+  .cta-confirmation { font-size: clamp(1.4rem, 6vw, 2rem); }
+
+  /* Footer */
+  .footer-ground { height: clamp(60px, 10vw, 90px); }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem 4vw; }
+  .footer-left { align-items: center; }
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="159" height="33" viewBox="0 0 159 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3.21079 3.2049C6.59904-0.183234 11.2577-1.01779 13.6161 1.34064C14.8926 2.61741 15.2305 4.56742 14.7372 6.6258C15.2775 5.4493 16.0777 4.28918 17.118 3.24885C20.5063-0.139265 25.1649-0.973835 27.5233 1.38459C29.8813 3.74319 29.0461 8.40171 25.6581 11.7899C24.7612 12.6867 23.7741 13.4023 22.7655 13.9295C24.6261 13.6104 26.3564 13.995 27.5233 15.1619C29.8813 17.5205 29.0462 22.179 25.6581 25.5672C22.2698 28.9554 17.6112 29.7899 15.2528 27.4315C13.9905 26.169 13.6428 24.2476 14.1122 22.2147C13.572 23.3824 12.7787 24.5344 11.7459 25.5672C8.35767 28.9555 3.69911 29.7899 1.34067 27.4315C-1.01774 25.073-0.183333 20.4145 3.20493 17.0262C4.13904 16.0921 5.1701 15.3527 6.2225 14.8201C4.3166 15.1767 2.53741 14.8021 1.34555 13.6102C-1.01245 11.2516-0.177313 6.59306 3.21079 3.2049Z" fill="#111111"/>
+      <path d="M142.88 32.923V29.4701H144.985C146.131 29.4701 146.67 28.8974 147.175 27.4994L147.832 25.7814L140.977 8.0957H145.474L148.741 17.3596C149.179 18.6734 149.617 19.9872 150.021 21.301C150.426 19.9872 150.847 18.6734 151.301 17.3596L154.552 8.0957H158.999L151.049 28.8132C149.988 31.5924 148.236 32.923 145.659 32.923H142.88Z" fill="#111111"/>
+      <path d="M139.815 8.09718V11.5164H136.194V25.8839H131.933V11.5164H128.732V8.09718H131.933V5.50328C131.933 2.43777 133.819 0.787109 137.339 0.787109H139.815V4.20634H138.181C136.733 4.20634 136.194 4.76217 136.194 6.21071V8.09718H139.815Z" fill="#111111"/>
+      <path d="M118.609 26.2886C113.371 26.2886 109.834 22.5325 109.834 17.0078C109.834 11.4831 113.371 7.69336 118.609 7.69336C123.848 7.69336 127.385 11.4831 127.385 17.0078C127.385 22.5325 123.848 26.2886 118.609 26.2886ZM118.609 22.7346C121.338 22.7346 123.073 20.5449 123.073 17.0078C123.073 13.4538 121.321 11.2473 118.609 11.2473C115.881 11.2473 114.129 13.437 114.129 17.0078C114.129 20.5618 115.864 22.7346 118.609 22.7346Z" fill="#111111"/>
+      <path d="M100.218 26.3061C95.8889 26.3061 92.6718 24.2175 92.4023 20.3941H96.5963C96.7816 22.129 98.028 23.1227 100.15 23.1227C102.205 23.1227 103.451 22.23 103.451 20.9668C103.451 19.8888 102.525 19.2656 101.026 18.9455L97.9943 18.3223C94.592 17.6149 92.8066 15.88 92.8066 13.1851C92.8066 9.91743 95.6194 7.71094 99.9649 7.71094C104.277 7.71094 107.224 9.98481 107.325 13.6398H103.334C103.3 12.0566 102.003 10.8944 100.066 10.8944C98.1964 10.8944 97.0511 11.8376 97.0511 13.0503C97.0511 14.1115 97.9269 14.7684 99.4091 15.0884L102.609 15.7453C106.13 16.4864 107.763 18.036 107.763 20.6467C107.763 24.1165 104.614 26.3061 100.218 26.3061Z" fill="#111111"/>
+      <path d="M77.7132 15.829V25.8846H73.4688V8.09785H77.6459V10.8265C78.8586 8.82212 80.6608 7.74414 83.1031 7.74414C86.8254 7.74414 89.4529 10.2033 89.4529 14.7679V25.8846H85.1916V15.4416C85.1916 12.8309 83.8778 11.4665 81.604 11.4665C79.3807 11.4665 77.7132 12.7972 77.7132 15.829Z" fill="#111111"/>
+      <path d="M60.2318 26.1709C56.6947 26.1709 54.084 24.3855 54.084 20.8315C54.084 16.7891 57.4021 15.7953 61.0739 15.4079C64.3752 15.0374 65.5037 14.9868 65.5037 13.7741V13.6394C65.5037 12.1234 64.291 11.0455 62.2529 11.0455C60.1812 11.0455 58.8001 12.1234 58.6822 13.6225H54.5893C54.7914 10.0854 57.6884 7.74414 62.3372 7.74414C66.969 7.74414 69.7145 10.0517 69.7145 13.7573V25.8846H65.5374V23.3749H65.47C64.6278 24.9582 63.1288 26.1709 60.2318 26.1709ZM61.276 23.0212C64.0552 23.0212 65.5205 21.3705 65.5205 19.2988V17.3786C64.9984 17.7155 63.3477 17.985 61.5961 18.2545C59.777 18.524 58.2274 19.1809 58.2274 20.7978C58.2274 22.1958 59.4233 23.0212 61.276 23.0212Z" fill="#111111"/>
+      <path d="M36.3145 25.8839V0.787109H40.5589V15.3062H40.6095L47.532 8.09718H52.6355L45.4098 15.7778L53.0734 25.8839H48.0036L42.1759 18.2706L40.5589 19.9381V25.8839H36.3145Z" fill="#111111"/>
+    </svg>
+  </a>
+  <a href="#ctaGrow" class="nav-connect"><span class="paren paren-l">{{</span><span class="nav-text"><span class="accent-teal">grow</span> <span class="nav-with">with us</span></span><span class="paren paren-r">}}</span></a>
+</nav>
+
+<div class="hero">
+  <div class="hero-noise"><img src="images/noise.png" alt=""></div>
+  <div class="hero-content">
+    <div class="hero-title">BLOOM [MCP]</div>
+    <div class="hero-tagline"><em>one</em> connector.<br><em>full</em> context.</div>
+  </div>
+  <div class="hero-flower">
+    <div class="flower-head" id="flowerHead"><img src="images/flower-head.png" alt="Bloom flower"></div>
+    <div class="flower-stem" id="flowerStem"><img src="images/stem-tight.png" alt=""></div>
+  </div>
+  <div class="hero-bee hero-bee-1"><img src="images/bee.png" alt=""></div>
+  <div class="hero-bee hero-bee-3"><img src="images/bee.png" alt=""></div>
+  <div class="hero-ground"></div>
+</div>
+
+<!-- Cursor bee -->
+<div class="cursor-bee" id="cursorBee"><img src="images/bee.png" alt=""></div>
+
+<!-- TRUTH -->
+<section class="truth-section">
+  <div class="truth-content">
+    <svg class="truth-clover" viewBox="0 0 759 687" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)" fill="#DBB35B"/>
+      <ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074" fill="#DBB35B"/>
+    </svg>
+    <div class="truth-line" id="truthLine1">the <em class="accent-teal">truth</em> about your business</div>
+    <div class="truth-line truth-indent" id="truthLine2">lives in a <em class="accent">dozen</em> places</div>
+    <div class="truth-line" id="truthLine3">your <em class="accent">people</em> have <em class="accent-teal">most</em> of the picture</div>
+    <div class="truth-line truth-indent" id="truthLine4">your <em>systems</em> have <em class="accent-teal">some</em> of it</div>
+  </div>
+</section>
+
+<!-- CLIMAX -->
+<section class="climax-section">
+  <p class="climax-text" id="climaxText"><em class="accent">nobody</em> has <em class="accent-teal">all</em> of it</p>
+</section>
+
+<!-- ICON CONVERGENCE + ASSEMBLY TEXT -->
+<div class="assembly-scroll">
+  <div class="assembly-sticky">
+    <svg class="assembly-clover" viewBox="0 0 759 687" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)" fill="#DBB35B"/>
+      <ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)" fill="#DBB35B"/>
+      <ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074" fill="#DBB35B"/>
+    </svg>
+    <div class="fragment cat-comms"><img src="icons-normalized/gmail.svg" alt="Gmail"></div>
+    <div class="fragment cat-comms"><img src="icons-normalized/outlook.svg" alt="Outlook"></div>
+    <div class="fragment cat-comms"><img src="icons-normalized/whatsapp.svg" alt="WhatsApp"></div>
+    <div class="fragment cat-comms"><img src="icons-normalized/zoom.svg" alt="Zoom"></div>
+    <div class="fragment cat-comms"><img src="icons-normalized/teams.svg" alt="Teams"></div>
+    <div class="fragment cat-crm"><img src="icons-normalized/hubspot.svg" alt="HubSpot"></div>
+    <div class="fragment cat-crm"><img src="icons-normalized/salesforce.svg" alt="Salesforce"></div>
+    <div class="fragment cat-erp"><img src="icons-normalized/sap.svg" alt="SAP"></div>
+    <div class="fragment cat-erp"><img src="icons-normalized/dynamics365.svg" alt="Dynamics 365"></div>
+    <div class="fragment cat-erp"><img src="icons-normalized/quickbooks.svg" alt="QuickBooks"></div>
+    <div class="fragment cat-erp"><img src="icons-normalized/xero.svg" alt="Xero"></div>
+    <div class="fragment cat-docs"><img src="icons-normalized/word.svg" alt="Word"></div>
+    <div class="fragment cat-docs"><img src="icons-normalized/excel.svg" alt="Excel"></div>
+    <div class="fragment cat-docs"><img src="icons-normalized/powerpoint.svg" alt="PowerPoint"></div>
+    <div class="fragment cat-docs"><img src="icons-normalized/pdf.svg" alt="PDF"></div>
+    <div class="fragment cat-storage"><img src="icons-normalized/googledrive.svg" alt="Google Drive"></div>
+    <div class="fragment cat-storage"><img src="icons-normalized/onedrive.svg" alt="OneDrive"></div>
+    <div class="fragment cat-storage"><img src="icons-normalized/dropbox.svg" alt="Dropbox"></div>
+    <div class="fragment cat-storage"><img src="icons-normalized/sharepoint.svg" alt="SharePoint"></div>
+    <div class="fragment cat-crm"><img src="icons-normalized/docusign.svg" alt="DocuSign"></div>
+    <div class="fragment cat-crm"><img src="icons-normalized/bloomberg.svg" alt="Bloomberg"></div>
+    <div class="assembly-text" id="assemblyText">
+      <span class="line line-serif">BLOOM</span>
+      <span class="line line-sans">ASSEMBLES</span>
+      <span class="line line-serif line-indent">THE FULL</span>
+      <span class="line line-serif line-indent-sm">PICTURE</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECTION + SYSTEMS -->
+<section class="connection-merged" id="connectionMerged">
+  <div class="gen-flower" id="genFlower">
+    <div class="petal petal-outer" style="rotate: -97deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: -65deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: 0deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: 57deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: 137deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: -23deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: 22deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-outer" style="rotate: 98deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: -97deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: -65deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: 0deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: 57deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: 137deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: -23deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: 22deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+    <div class="petal petal-inner" style="rotate: 98deg"><svg viewBox="0 0 759 687"><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.115 0)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 268.006 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 273.785)"/><ellipse cx="125.929" cy="180.916" rx="125.929" ry="180.916" transform="matrix(0.740691 0.671846 -0.740691 0.671846 571.877 0.855469)"/><ellipse cx="368.142" cy="333.115" rx="140.159" ry="132.074"/></svg></div>
+  </div>
+  <div class="merged-text">
+    <span class="merged-line">bloom is a <em class="accent">single</em></span>
+    <span class="merged-line">connection point</span>
+    <span class="merged-line">between systems,</span>
+    <span class="merged-line">humans &amp; <span class="accent-teal" style="font-family:'InterDisplay',sans-serif;font-weight:500;font-style:normal">AI</span></span>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-btn" id="ctaGrow">
+    <span class="paren paren-l">{{</span>
+    <span class="cta-text"><span class="accent-teal">grow</span> <span class="cta-with">with us</span></span>
+    <form class="cta-form" id="ctaForm">
+      <input type="email" class="cta-input" id="ctaEmail" placeholder="your@email.com" required>
+      <button type="submit" class="cta-submit">&rarr;</button>
+    </form>
+    <span class="paren paren-r">}}</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer-ground"></div>
+<footer>
+  <div class="footer-left">
+    <span>Tel Aviv / Amsterdam</span>
+    <span>anything@kansofy.com</span>
+  </div>
+  <div class="footer-right">&copy; 2026 bloom[mcp] by kansofy</div>
+</footer>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── Lenis smooth scroll (desktop only) ──
+const isMobile = window.innerWidth <= 768;
+if (!isMobile) {
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true,
+  });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+// Accessibility: skip animations for reduced motion preference
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  gsap.globalTimeline.timeScale(100);
+}
+
+// ── Helper: reveal on scroll ──
+function reveal(el, vars, trigger) {
+  gsap.to(el, {
+    ...vars,
+    scrollTrigger: {
+      trigger: trigger || el,
+      start: "top 82%",
+      toggleActions: "play none none none"
+    }
+  });
+}
+
+// ═══════════════════════════════════
+// HERO ENTRANCE ANIMATIONS
+// ═══════════════════════════════════
+gsap.from("nav", { y: -30, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.2 });
+gsap.from(".hero-title", { y: 50, opacity: 0, duration: 1.2, ease: "power3.out", delay: 0.3 });
+gsap.from(".hero-tagline", { y: 30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.6 });
+gsap.from("#flowerHead", { scale: 0, opacity: 0, duration: 1, ease: "back.out(1.7)", delay: 0.8, transformOrigin: "center bottom" });
+// Flower head quick turn on hover
+document.querySelector("#flowerHead").addEventListener("mouseenter", () => {
+  gsap.to("#flowerHead img", { rotation: "+=180", duration: 0.7, ease: "power2.inOut", yoyo: true, repeat: 1 });
+});
+gsap.from("#flowerStem", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out", delay: 0.5 });
+gsap.from(".hero-bee", { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", stagger: 0.15, delay: 1 });
+
+// ═══════════════════════════════════
+// CURSOR BEE — follows mouse lazily
+// ═══════════════════════════════════
+const bee = document.getElementById("cursorBee");
+// Start bee in the hero area
+const beePos = { x: window.innerWidth * 0.6, y: window.innerHeight * 0.2 };
+const mousePos = { x: beePos.x, y: beePos.y };
+let beeAngle = 0;
+
+// Set initial position + pop in with the other bees
+gsap.set(bee, { left: beePos.x + 15, top: beePos.y - 15 });
+gsap.from(bee, { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", delay: 1.3 });
+
+document.addEventListener("mousemove", (e) => {
+  mousePos.x = e.clientX;
+  mousePos.y = e.clientY;
+});
+
+gsap.ticker.add(() => {
+  const dx = mousePos.x - beePos.x;
+  const dy = mousePos.y - beePos.y;
+  beePos.x += dx * 0.15;
+  beePos.y += dy * 0.15;
+  // Tilt toward movement direction
+  const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+  beeAngle += (targetAngle - beeAngle) * 0.05;
+  // Gentle wobble
+  const wobble = Math.sin(Date.now() * 0.005) * 4;
+  gsap.set(bee, {
+    left: beePos.x + 15,
+    top: beePos.y - 15 + wobble,
+    rotation: beeAngle * 0.15,
+  });
+});
+
+// ═══════════════════════════════════
+// TRUTH — puzzle assembly (words pop in random order)
+// ═══════════════════════════════════
+const allTruthWords = [];
+document.querySelectorAll(".truth-line").forEach((line) => {
+  const split = new SplitType(line, { types: 'words' });
+  gsap.set(line, { opacity: 1, y: 0 });
+  split.words.forEach(word => {
+    gsap.set(word, { opacity: 0, scale: 0 });
+    allTruthWords.push(word);
+  });
+});
+
+// Shuffle words into random order (Fisher-Yates)
+for (let i = allTruthWords.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [allTruthWords[i], allTruthWords[j]] = [allTruthWords[j], allTruthWords[i]];
+}
+
+// Scrub-linked timeline: words pop in one by one in shuffled order
+const truthTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".truth-section",
+    start: "top 80%",
+    end: "top 20%",
+    scrub: 0.6,
+  }
+});
+allTruthWords.forEach((word, i) => {
+  truthTl.to(word, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.3,
+    ease: "back.out(1.7)",
+  }, i * 0.04);
+});
+
+// ═══════════════════════════════════
+// CLIMAX — word-by-word reveal
+// ═══════════════════════════════════
+const climaxSplit = new SplitType("#climaxText", { types: 'words' });
+gsap.set("#climaxText", { opacity: 1, y: 0 });
+gsap.from(climaxSplit.words, {
+  y: 20, opacity: 0,
+  duration: 0.7,
+  ease: "power3.out",
+  stagger: 0.08,
+  scrollTrigger: {
+    trigger: "#climaxText",
+    start: "top 85%",
+    toggleActions: "play none none none",
+  }
+});
+
+// ═══════════════════════════════════
+// ICON CONVERGENCE + ASSEMBLY TEXT
+// ═══════════════════════════════════
+const fragments = gsap.utils.toArray(".fragment");
+const fragSize = 48;
+
+function getCenter() {
+  const el = document.querySelector('.assembly-sticky');
+  return { x: el.offsetWidth / 2, y: el.offsetHeight / 2 };
+}
+
+// Scatter using golden angle but clamp to viewport bounds
+const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+function positionFragments() {
+  const container = document.querySelector('.assembly-sticky');
+  const W = container.offsetWidth;
+  const H = container.offsetHeight;
+  const pad = fragSize + 20; // safe margin from edges
+
+  fragments.forEach((frag, i) => {
+    const angle = goldenAngle * i;
+    // Normalize radius 0→1 using sqrt for even area distribution
+    const t = (i + 0.5) / fragments.length;
+    const r = Math.sqrt(t);
+    // Convert polar to cartesian, scaled to container with padding
+    const halfW = (W - pad * 2) / 2;
+    const halfH = (H - pad * 2) / 2;
+    const x = W / 2 + Math.cos(angle) * r * halfW + (Math.random() - 0.5) * 30;
+    const y = H / 2 + Math.sin(angle) * r * halfH + (Math.random() - 0.5) * 30;
+    // Clamp to safe bounds
+    const cx = Math.max(pad, Math.min(W - pad, x));
+    const cy = Math.max(pad, Math.min(H - pad, y));
+
+    gsap.set(frag, {
+      x: cx - fragSize / 2,
+      y: cy - fragSize / 2,
+      rotation: (Math.random() - 0.5) * 20,
+      opacity: 0.9,
+    });
+  });
+}
+positionFragments();
+
+// Subtle floating drift
+const floatingTweens = fragments.map((frag) => {
+  return gsap.to(frag, {
+    y: `+=${6 + Math.random() * 10}`,
+    x: `+=${(Math.random() - 0.5) * 6}`,
+    rotation: `+=${(Math.random() - 0.5) * 3}`,
+    duration: 2.5 + Math.random() * 2,
+    ease: "sine.inOut",
+    yoyo: true, repeat: -1,
+    delay: Math.random() * 2,
+  });
+});
+
+gsap.set("#assemblyText", { opacity: 0 });
+
+// Kill floating when scroll begins
+ScrollTrigger.create({
+  trigger: ".assembly-scroll",
+  start: "top 80%",
+  once: true,
+  onEnter: () => floatingTweens.forEach(tw => tw.kill()),
+});
+
+// Main pinned scroll timeline
+const assemblyTl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".assembly-scroll",
+    start: "top top",
+    end: () => `+=${window.innerHeight * 2.5}`,
+    pin: ".assembly-sticky",
+    pinSpacing: true,
+    scrub: 1,
+    invalidateOnRefresh: true,
+  }
+});
+
+// Phase 1: Converge to loose orbit + unify color (0 → 1.2)
+fragments.forEach((frag, i) => {
+  const c = getCenter();
+  const angle = (Math.PI * 2 / fragments.length) * i;
+  const targetRadius = 50 + Math.random() * 30;
+  assemblyTl.to(frag, {
+    x: c.x + Math.cos(angle) * targetRadius - fragSize / 2,
+    y: c.y + Math.sin(angle) * targetRadius - fragSize / 2,
+    rotation: 0, scale: 0.8,
+    backgroundColor: "#3D62A0",
+    boxShadow: "0 2px 20px rgba(61, 98, 160, 0.25)",
+    duration: 1.2, ease: "power2.inOut",
+  }, 0);
+});
+
+// Phase 2: Compress + dissolve to center (1.2 → 2.2)
+fragments.forEach((frag) => {
+  const c = getCenter();
+  assemblyTl.to(frag, {
+    x: c.x - fragSize / 2,
+    y: c.y - fragSize / 2,
+    scale: 0.05, opacity: 0,
+    duration: 1, ease: "power3.in",
+  }, 1.2);
+});
+
+// Phase 3: Text assembles from sides (2.2 → 4.2)
+const lines = gsap.utils.toArray("#assemblyText .line");
+gsap.set("#assemblyText", { opacity: 1, scale: 1, filter: "none" });
+lines.forEach((line, i) => {
+  const fromLeft = i % 2 === 0;
+  gsap.set(line, { xPercent: fromLeft ? -15 : 15, opacity: 0 });
+  assemblyTl.to(line, {
+    xPercent: 0, opacity: 1,
+    duration: 0.8, ease: "power3.out",
+  }, 2.2 + i * 0.25);
+});
+
+// Phase 4: Hold for reading
+assemblyTl.to({}, { duration: 1.5 });
+
+// Recalculate on resize
+ScrollTrigger.addEventListener("refreshInit", positionFragments);
+
+// ═══════════════════════════════════
+// CONNECTION MERGED — word reveal
+// ═══════════════════════════════════
+const mergedSplit = new SplitType("#connectionMerged .merged-text", { types: 'words' });
+gsap.from(mergedSplit.words, {
+  y: 30, opacity: 0,
+  duration: 0.5,
+  ease: "power3.out",
+  stagger: 0.04,
+  scrollTrigger: {
+    trigger: "#connectionMerged",
+    start: "top 75%",
+    toggleActions: "play none none none",
+  }
+});
+
+// Accent color bloom — force accent colors after words have appeared
+// SplitType wraps words in divs that can override CSS classes, so we use gsap.to
+ScrollTrigger.create({
+  trigger: ".truth-section",
+  start: "top 20%",
+  once: true,
+  onEnter: () => {
+    document.querySelectorAll(".truth-section .accent, .climax-section .accent").forEach(el => {
+      gsap.to(el, { color: "var(--coral)", duration: 0.6, ease: "power2.out", delay: 0.2 });
+    });
+    document.querySelectorAll(".truth-section .accent-teal, .climax-section .accent-teal").forEach(el => {
+      gsap.to(el, { color: "var(--teal)", duration: 0.6, ease: "power2.out", delay: 0.2 });
+    });
+  }
+});
+
+// Re-apply accent colors after merged word reveal (SplitType wraps words, overriding CSS)
+ScrollTrigger.create({
+  trigger: "#connectionMerged",
+  start: "top 70%",
+  once: true,
+  onEnter: () => {
+    gsap.to("#connectionMerged .accent", { color: "var(--coral)", duration: 0.6, delay: 0.8, ease: "power2.out" });
+    gsap.to("#connectionMerged .accent-teal", { color: "var(--teal)", duration: 0.6, delay: 0.8, ease: "power2.out" });
+  }
+});
+
+// ═══════════════════════════════════
+// CONNECTION FLOWER — slow petal drift
+// ═══════════════════════════════════
+const connOuterPetals = gsap.utils.toArray("#genFlower .petal-outer");
+const connInnerPetals = gsap.utils.toArray("#genFlower .petal-inner");
+connOuterPetals.forEach((petal, i) => {
+  const baseRotation = parseFloat(petal.style.rotate);
+  gsap.to(petal, {
+    rotate: baseRotation + 8,
+    scale: 1.02,
+    duration: 4 + i * 0.3,
+    ease: "sine.inOut",
+    yoyo: true,
+    repeat: -1,
+    delay: i * 0.4,
+  });
+});
+connInnerPetals.forEach((petal, i) => {
+  const baseRotation = parseFloat(petal.style.rotate);
+  gsap.to(petal, {
+    rotate: baseRotation - 6,
+    scale: 1.03,
+    duration: 3.5 + i * 0.25,
+    ease: "sine.inOut",
+    yoyo: true,
+    repeat: -1,
+    delay: i * 0.35,
+  });
+});
+
+// ═══════════════════════════════════
+// CTA — clover + text scale up
+// ═══════════════════════════════════
+gsap.to("#ctaGrow", {
+  opacity: 1, y: 0, duration: 1, ease: "power3.out",
+  scrollTrigger: { trigger: "#ctaGrow", start: "top 85%", toggleActions: "play none none none" }
+});
+
+// ═══════════════════════════════════
+// MAGNETIC EFFECT — CTA + nav link
+// ═══════════════════════════════════
+document.querySelectorAll(".nav-connect, #ctaGrow").forEach((el) => {
+  const strength = el.id === "ctaGrow" ? 0.2 : 0.4;
+  const ease = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" });
+  const easeY = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" });
+
+  el.addEventListener("mousemove", (e) => {
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    ease((e.clientX - cx) * strength);
+    easeY((e.clientY - cy) * strength);
+  });
+
+  el.addEventListener("mouseleave", () => {
+    ease(0);
+    easeY(0);
+  });
+});
+
+// ═══════════════════════════════════
+// CTA EMAIL CAPTURE
+// ═══════════════════════════════════
+const ctaGrow = document.getElementById("ctaGrow");
+const ctaText = ctaGrow.querySelector(".cta-text");
+const ctaForm = document.getElementById("ctaForm");
+const ctaEmail = document.getElementById("ctaEmail");
+
+ctaGrow.addEventListener("click", (e) => {
+  if (ctaGrow.classList.contains("expanded") || ctaGrow.classList.contains("done")) return;
+  e.preventDefault();
+  ctaGrow.classList.add("expanded");
+  // Change text to instruction — all LouizeDisplay italic, smaller
+  ctaText.innerHTML = 'leave us your email';
+  ctaForm.classList.add("visible");
+  gsap.fromTo(ctaForm, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" });
+  setTimeout(() => ctaEmail.focus(), 300);
+});
+
+// Collapse back to button on mouseleave (only if input is empty)
+ctaGrow.addEventListener("mouseleave", () => {
+  if (!ctaGrow.classList.contains("expanded") || ctaGrow.classList.contains("done")) return;
+  if (ctaEmail.value.trim()) return;
+  gsap.to(ctaForm, {
+    opacity: 0, duration: 0.25, ease: "power2.in",
+    onComplete: () => {
+      ctaForm.classList.remove("visible");
+      ctaGrow.classList.remove("expanded");
+      ctaText.innerHTML = '<span class="accent-teal">grow</span> <span class="cta-with">with us</span>';
+      ctaEmail.value = "";
+      ctaEmail.style.borderBottomColor = "";
+      gsap.set(ctaForm, { clearProps: "opacity,x" });
+    }
+  });
+});
+
+ctaForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = ctaEmail.value.trim();
+  // Strict email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!email || !emailRegex.test(email)) {
+    ctaEmail.style.borderBottomColor = "var(--coral)";
+    gsap.fromTo(ctaEmail, { x: -4 }, { x: 0, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+    return;
+  }
+  // Hide everything, replace with centered confirmation
+  gsap.to(ctaGrow, {
+    opacity: 0, duration: 0.3, ease: "power2.in",
+    onComplete: () => {
+      ctaGrow.innerHTML = '<span class="paren paren-l">{{</span><span class="cta-confirmation">you\'re in</span><span class="paren paren-r">}}</span>';
+      ctaGrow.classList.remove("expanded");
+      ctaGrow.classList.add("done");
+      gsap.to(ctaGrow, { opacity: 1, duration: 0.6, ease: "power3.out" });
+      // Send to Cloudflare Worker → D1
+      fetch("https://bloom-waitlist.vadim-96c.workers.dev", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      }).catch(() => {});
+    }
+  });
+});
+</script>
+
+</body>
+</html>

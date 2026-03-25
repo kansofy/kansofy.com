@@ -1,0 +1,12 @@
+{
+  "name": "bloom-waitlist",
+  "main": "index.js",
+  "compatibility_date": "2025-03-25",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bloom-waitlist",
+      "database_id": "ba56591e-5524-497a-995e-c768cb25539e"
+    }
+  ]
+}
