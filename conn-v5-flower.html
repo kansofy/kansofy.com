@@ -263,7 +263,8 @@ nav {
 }
 .truth-line em { font-style: italic; }
 .truth-indent { padding-left: 18%; }
-#truthLine3, #truthLine4 { margin-top: 0.25em; }
+#truthLine3 { margin-top: 0.25em; }
+#truthLine4 { padding-left: 12%; }
 .truth-clover {
   position: absolute;
   top: -5%; right: -2%;
@@ -281,8 +282,8 @@ nav {
 }
 .climax-text {
   font-family: 'LouizeDisplay', serif;
-  font-size: clamp(2rem, 7.4vw, 76px);
-  line-height: 1.14;
+  font-size: clamp(2.8rem, 11.3vw, 116px);
+  line-height: 0.85;
   color: var(--blue);
   opacity: 0;
   transform: translateY(20px);
@@ -505,27 +506,28 @@ footer {
   .nav-connect { font-size: 0.8rem; }
 
   /* Hero */
-  .hero { min-height: 60vh; }
-  .hero-content { padding: 4vh 5vw 0; }
-  .hero-title { font-size: clamp(2.8rem, 14vw, 4.5rem); }
-  .hero-tagline { font-size: clamp(1.5rem, 6vw, 2.5rem); bottom: 28%; }
-  .hero-ground { height: 18%; }
-  .hero-flower { right: 0; bottom: 14%; }
-  .flower-head { width: clamp(90px, 18vw, 150px); }
-  .flower-stem { width: clamp(80px, 16vw, 140px); }
+  .hero { min-height: 50vh; }
+  .hero-content { padding: 3vh 5vw 0; }
+  .hero-title { font-size: clamp(2.2rem, 12vw, 3.5rem); }
+  .hero-tagline { font-size: clamp(1.2rem, 5vw, 2rem); bottom: 32%; left: 5%; }
+  .hero-ground { height: 22%; }
+  .hero-flower { right: 5%; bottom: 20%; }
+  .flower-head { width: clamp(90px, 22vw, 150px); }
+  .flower-stem { width: clamp(80px, 20vw, 140px); }
   .hero-bee { display: none; }
   .cursor-bee { display: none; }
 
   /* Truth */
-  .truth-section { padding: 8vh 5vw 4vh; }
+  .truth-section { padding: 4vh 4vw 2vh; }
   .truth-indent { padding-left: 0; }
-  .truth-line { font-size: clamp(1.6rem, 7.5vw, 2.8rem); line-height: 0.9; }
-  #truthLine3, #truthLine4 { margin-top: 0.3em; }
-  .truth-clover { width: clamp(120px, 40vw, 200px); top: -2%; right: -5%; }
+  #truthLine4 { padding-left: 0; }
+  .truth-line { font-size: clamp(1.5rem, 7vw, 2.5rem); line-height: 0.9; }
+  #truthLine3 { margin-top: 0.4em; }
+  .truth-clover { display: none; }
 
   /* Climax */
-  .climax-section { padding: 6vh 5vw 8vh; }
-  .climax-text { font-size: clamp(1.4rem, 6.5vw, 2.2rem); }
+  .climax-section { padding: 3vh 4vw 4vh; }
+  .climax-text { font-size: clamp(1.5rem, 7vw, 2.5rem); line-height: 0.9; }
 
   /* Icon convergence */
   .fragment { width: 34px; height: 34px; padding: 6px; border-radius: 8px; }
@@ -533,7 +535,7 @@ footer {
   .assembly-text .line-indent { padding-left: 0; }
 
   /* Connection merged */
-  .connection-merged { padding: 8vh 5vw 8vh; min-height: auto; }
+  .connection-merged { padding: 4vh 5vw 4vh; min-height: auto; }
   .connection-merged .gen-flower {
     width: clamp(150px, 50vw, 230px);
     left: 60%;
@@ -543,7 +545,7 @@ footer {
   .merged-text { font-size: clamp(1.6rem, 7.5vw, 2.8rem); line-height: 0.95; }
 
   /* CTA */
-  .cta-section { padding: 6vh 5vw 8vh; }
+  .cta-section { padding: 4vh 5vw 5vh; }
   .cta-btn { font-size: clamp(1.6rem, 7vw, 2.5rem); gap: 6px; }
   .cta-btn .paren { font-size: 1.1em; }
   .cta-btn.expanded { white-space: normal; flex-wrap: nowrap; gap: 6px; }
@@ -557,6 +559,23 @@ footer {
   .footer-ground { height: clamp(60px, 10vw, 90px); }
   footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem 4vw; }
   .footer-left { align-items: center; }
+}
+
+/* ── TABLET ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero { min-height: 65vh; }
+  .hero-title { font-size: clamp(3.5rem, 12vw, 7rem); }
+  .hero-tagline { font-size: clamp(1.8rem, 5vw, 2.8rem); }
+  .truth-section { padding: 8vh 4vw 4vh; }
+  .truth-line { font-size: clamp(2rem, 8.5vw, 4.5rem); line-height: 0.88; }
+  .truth-indent { padding-left: 12%; }
+  #truthLine4 { padding-left: 8%; }
+  #truthLine3 { margin-top: 0.25em; }
+  .climax-section { padding: 5vh 4vw 8vh; }
+  .climax-text { font-size: clamp(2rem, 8.5vw, 4.5rem); line-height: 0.88; }
+  .connection-merged { padding: 10vh 4vw 8vh; min-height: 80vh; }
+  .connection-merged .gen-flower { width: clamp(300px, 45vw, 450px); }
+  .merged-text { font-size: clamp(2rem, 8.5vw, 4.5rem); }
 }
 
 </style>
@@ -736,6 +755,9 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   gsap.globalTimeline.timeScale(100);
 }
 
+// iOS dynamic address bar — refresh ScrollTrigger positions
+window.visualViewport?.addEventListener('resize', () => ScrollTrigger.refresh());
+
 // ── Helper: reveal on scroll ──
 function reveal(el, vars, trigger) {
   gsap.to(el, {
@@ -798,57 +820,72 @@ gsap.ticker.add(() => {
 });
 
 // ═══════════════════════════════════
-// TRUTH — puzzle assembly (words pop in random order)
+// TRUTH + CLIMAX — wait for fonts then init
 // ═══════════════════════════════════
-const allTruthWords = [];
-document.querySelectorAll(".truth-line").forEach((line) => {
-  const split = new SplitType(line, { types: 'words' });
-  gsap.set(line, { opacity: 1, y: 0 });
-  split.words.forEach(word => {
-    gsap.set(word, { opacity: 0, scale: 0 });
-    allTruthWords.push(word);
+document.fonts.ready.then(() => {
+  const allTruthWords = [];
+  document.querySelectorAll(".truth-line").forEach((line) => {
+    const split = new SplitType(line, { types: 'words' });
+    gsap.set(line, { opacity: 1, y: 0 });
+    split.words.forEach(word => {
+      gsap.set(word, { opacity: 0, scale: isMobile ? 1 : 0 });
+      allTruthWords.push(word);
+    });
   });
-});
 
-// Shuffle words into random order (Fisher-Yates)
-for (let i = allTruthWords.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [allTruthWords[i], allTruthWords[j]] = [allTruthWords[j], allTruthWords[i]];
-}
-
-// Scrub-linked timeline: words pop in one by one in shuffled order
-const truthTl = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".truth-section",
-    start: "top 80%",
-    end: "top 20%",
-    scrub: 0.6,
+  if (isMobile) {
+    // Mobile: simple sequential fade-in, no shuffle, no scrub
+    gsap.to(allTruthWords, {
+      opacity: 1,
+      duration: 0.4,
+      ease: "power2.out",
+      stagger: 0.06,
+      scrollTrigger: {
+        trigger: ".truth-section",
+        start: "top 75%",
+        toggleActions: "play none none none",
+      }
+    });
+  } else {
+    // Desktop: shuffled puzzle scrub
+    for (let i = allTruthWords.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allTruthWords[i], allTruthWords[j]] = [allTruthWords[j], allTruthWords[i]];
+    }
+    const truthTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".truth-section",
+        start: "top 80%",
+        end: "top 20%",
+        scrub: 0.6,
+      }
+    });
+    allTruthWords.forEach((word, i) => {
+      truthTl.to(word, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.3,
+        ease: "back.out(1.7)",
+      }, i * 0.04);
+    });
   }
-});
-allTruthWords.forEach((word, i) => {
-  truthTl.to(word, {
-    opacity: 1,
-    scale: 1,
-    duration: 0.3,
-    ease: "back.out(1.7)",
-  }, i * 0.04);
-});
 
-// ═══════════════════════════════════
-// CLIMAX — word-by-word reveal
-// ═══════════════════════════════════
-const climaxSplit = new SplitType("#climaxText", { types: 'words' });
-gsap.set("#climaxText", { opacity: 1, y: 0 });
-gsap.from(climaxSplit.words, {
-  y: 20, opacity: 0,
-  duration: 0.7,
-  ease: "power3.out",
-  stagger: 0.08,
-  scrollTrigger: {
-    trigger: "#climaxText",
-    start: "top 85%",
-    toggleActions: "play none none none",
-  }
+  // Climax — word-by-word reveal
+  const climaxSplit = new SplitType("#climaxText", { types: 'words' });
+  gsap.set("#climaxText", { opacity: 1, y: 0 });
+  gsap.from(climaxSplit.words, {
+    y: 20, opacity: 0,
+    duration: 0.7,
+    ease: "power3.out",
+    stagger: 0.08,
+    scrollTrigger: {
+      trigger: "#climaxText",
+      start: "top 85%",
+      toggleActions: "play none none none",
+    }
+  });
+
+  ScrollTrigger.refresh();
 });
 
 // ═══════════════════════════════════
@@ -991,18 +1028,18 @@ gsap.from(mergedSplit.words, {
   }
 });
 
-// Accent color bloom — force accent colors after words have appeared
-// SplitType wraps words in divs that can override CSS classes, so we use gsap.to
+// Accent color bloom — fire while section is still in view
 ScrollTrigger.create({
   trigger: ".truth-section",
-  start: "top 20%",
+  start: "top 65%",
   once: true,
   onEnter: () => {
+    const delay = isMobile ? 1.5 : 0.3;
     document.querySelectorAll(".truth-section .accent, .climax-section .accent").forEach(el => {
-      gsap.to(el, { color: "var(--coral)", duration: 0.6, ease: "power2.out", delay: 0.2 });
+      gsap.to(el, { color: "var(--coral)", duration: 0.6, ease: "power2.out", delay });
     });
     document.querySelectorAll(".truth-section .accent-teal, .climax-section .accent-teal").forEach(el => {
-      gsap.to(el, { color: "var(--teal)", duration: 0.6, ease: "power2.out", delay: 0.2 });
+      gsap.to(el, { color: "var(--teal)", duration: 0.6, ease: "power2.out", delay });
     });
   }
 });
