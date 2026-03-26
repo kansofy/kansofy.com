@@ -103,12 +103,11 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   background: var(--cream);
   font-family: 'InterDisplay', 'Inter', sans-serif;
   color: var(--blue);
-  overflow-x: hidden;
 }
 
 .accent { color: var(--coral); }
@@ -151,7 +150,7 @@ nav {
 .nav-connect .paren {
   font-weight: 300;
   color: var(--gold);
-  opacity: 0.5;
+  opacity: 0.8;
   transition: transform 0.4s ease, opacity 0.4s ease;
   font-size: 1.1em;
 }
@@ -310,7 +309,7 @@ nav {
   position: absolute; top: 0; left: 0;
   width: 48px; height: 48px;
   border-radius: 12px; padding: 9px;
-  will-change: transform, opacity, background-color;
+  will-change: transform, opacity;
   pointer-events: none;
   display: flex; align-items: center; justify-content: center;
 }
@@ -418,7 +417,7 @@ nav {
 .cta-btn .paren {
   font-weight: 300;
   color: var(--gold);
-  opacity: 0.5;
+  opacity: 0.8;
   transition: transform 0.4s ease, opacity 0.4s ease, font-size 0.4s ease;
   font-size: 1.2em;
 }
@@ -511,14 +510,14 @@ footer {
   .hero-title { font-size: clamp(2.2rem, 12vw, 3.5rem); }
   .hero-tagline { font-size: clamp(1.2rem, 5vw, 2rem); bottom: 32%; left: 5%; }
   .hero-ground { height: 22%; }
-  .hero-flower { right: 5%; bottom: 20%; }
+  .hero-flower { right: 2%; bottom: 20%; }
   .flower-head { width: clamp(90px, 22vw, 150px); }
   .flower-stem { width: clamp(80px, 20vw, 140px); }
   .hero-bee { display: none; }
   .cursor-bee { display: none; }
 
   /* Truth */
-  .truth-section { padding: 4vh 4vw 2vh; }
+  .truth-section { padding: 4vh 4vw 0; }
   .truth-indent { padding-left: 0; }
   #truthLine4 { padding-left: 0; }
   .truth-line { font-size: clamp(1.5rem, 7vw, 2.5rem); line-height: 0.9; }
@@ -526,7 +525,7 @@ footer {
   .truth-clover { display: none; }
 
   /* Climax */
-  .climax-section { padding: 3vh 4vw 4vh; }
+  .climax-section { padding: 1vh 4vw 5vh; }
   .climax-text { font-size: clamp(1.5rem, 7vw, 2.5rem); line-height: 0.9; }
 
   /* Icon convergence */
@@ -535,7 +534,7 @@ footer {
   .assembly-text .line-indent { padding-left: 0; }
 
   /* Connection merged */
-  .connection-merged { padding: 4vh 5vw 4vh; min-height: auto; }
+  .connection-merged { padding: 6vh 5vw 6vh; min-height: 50vh; }
   .connection-merged .gen-flower {
     width: clamp(150px, 50vw, 230px);
     left: 60%;
@@ -546,13 +545,13 @@ footer {
 
   /* CTA */
   .cta-section { padding: 4vh 5vw 5vh; }
-  .cta-btn { font-size: clamp(1.6rem, 7vw, 2.5rem); gap: 6px; }
+  .cta-btn { font-size: clamp(1.8rem, 7vw, 2.5rem); gap: 6px; }
   .cta-btn .paren { font-size: 1.1em; }
   .cta-btn.expanded { white-space: normal; flex-wrap: nowrap; gap: 6px; }
   .cta-btn.expanded .cta-text { font-size: 0.4em; }
   .cta-btn.expanded .paren { font-size: 0.9em; }
-  .cta-input { width: clamp(120px, 40vw, 220px); font-size: 0.9rem; }
-  .cta-submit { font-size: 1rem; }
+  .cta-input { width: clamp(120px, 40vw, 220px); font-size: 1rem; }
+  .cta-submit { font-size: 1rem; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; touch-action: manipulation; }
   .cta-confirmation { font-size: clamp(1.4rem, 6vw, 2rem); }
 
   /* Footer */
@@ -576,6 +575,15 @@ footer {
   .connection-merged { padding: 10vh 4vw 8vh; min-height: 80vh; }
   .connection-merged .gen-flower { width: clamp(300px, 45vw, 450px); }
   .merged-text { font-size: clamp(2rem, 8.5vw, 4.5rem); }
+}
+
+/* ── TOUCH DEVICES — no sticky hover ── */
+@media (hover: none) {
+  .cta-btn:hover .paren-l,
+  .cta-btn:hover .paren-r { transform: none; }
+  .cta-btn:hover { letter-spacing: normal; }
+  .nav-connect:hover .paren-l,
+  .nav-connect:hover .paren-r { transform: none; opacity: 0.5; }
 }
 
 </style>
@@ -755,8 +763,21 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   gsap.globalTimeline.timeScale(100);
 }
 
-// iOS dynamic address bar — refresh ScrollTrigger positions
-window.visualViewport?.addEventListener('resize', () => ScrollTrigger.refresh());
+// iOS dynamic address bar — refresh ScrollTrigger positions.
+// Debounced + guarded: skip refresh while the assembly convergence timeline is active
+// to prevent positionFragments() from teleporting icons back to scatter mid-animation.
+let _vpResizeTimer;
+window.visualViewport?.addEventListener('resize', () => {
+  clearTimeout(_vpResizeTimer);
+  _vpResizeTimer = setTimeout(() => {
+    // assemblyTl is declared further below; this handler only fires during user scroll,
+    // so assemblyTl is always initialised by the time it is first called.
+    const st = typeof assemblyTl !== 'undefined' && assemblyTl.scrollTrigger;
+    if (!st || !st.isActive) {
+      ScrollTrigger.refresh();
+    }
+  }, 150);
+});
 
 // ── Helper: reveal on scroll ──
 function reveal(el, vars, trigger) {
@@ -785,39 +806,27 @@ gsap.from("#flowerStem", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out",
 gsap.from(".hero-bee", { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", stagger: 0.15, delay: 1 });
 
 // ═══════════════════════════════════
-// CURSOR BEE — follows mouse lazily
+// CURSOR BEE — follows mouse lazily (desktop only)
 // ═══════════════════════════════════
-const bee = document.getElementById("cursorBee");
-// Start bee in the hero area
-const beePos = { x: window.innerWidth * 0.6, y: window.innerHeight * 0.2 };
-const mousePos = { x: beePos.x, y: beePos.y };
-let beeAngle = 0;
-
-// Set initial position + pop in with the other bees
-gsap.set(bee, { left: beePos.x + 15, top: beePos.y - 15 });
-gsap.from(bee, { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", delay: 1.3 });
-
-document.addEventListener("mousemove", (e) => {
-  mousePos.x = e.clientX;
-  mousePos.y = e.clientY;
-});
-
-gsap.ticker.add(() => {
-  const dx = mousePos.x - beePos.x;
-  const dy = mousePos.y - beePos.y;
-  beePos.x += dx * 0.15;
-  beePos.y += dy * 0.15;
-  // Tilt toward movement direction
-  const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-  beeAngle += (targetAngle - beeAngle) * 0.05;
-  // Gentle wobble
-  const wobble = Math.sin(Date.now() * 0.005) * 4;
-  gsap.set(bee, {
-    left: beePos.x + 15,
-    top: beePos.y - 15 + wobble,
-    rotation: beeAngle * 0.15,
+if (!isMobile) {
+  const bee = document.getElementById("cursorBee");
+  const beePos = { x: window.innerWidth * 0.6, y: window.innerHeight * 0.2 };
+  const mousePos = { x: beePos.x, y: beePos.y };
+  let beeAngle = 0;
+  gsap.set(bee, { left: beePos.x + 15, top: beePos.y - 15 });
+  gsap.from(bee, { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(2)", delay: 1.3 });
+  document.addEventListener("mousemove", (e) => { mousePos.x = e.clientX; mousePos.y = e.clientY; });
+  gsap.ticker.add(() => {
+    const dx = mousePos.x - beePos.x;
+    const dy = mousePos.y - beePos.y;
+    beePos.x += dx * 0.15;
+    beePos.y += dy * 0.15;
+    const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+    beeAngle += (targetAngle - beeAngle) * 0.05;
+    const wobble = Math.sin(Date.now() * 0.005) * 4;
+    gsap.set(bee, { left: beePos.x + 15, top: beePos.y - 15 + wobble, rotation: beeAngle * 0.15 });
   });
-});
+}
 
 // ═══════════════════════════════════
 // TRUTH + CLIMAX — wait for fonts then init
@@ -834,15 +843,15 @@ document.fonts.ready.then(() => {
   });
 
   if (isMobile) {
-    // Mobile: simple sequential fade-in, no shuffle, no scrub
+    // Mobile: fast sequential fade-in, no shuffle, no scrub
     gsap.to(allTruthWords, {
       opacity: 1,
-      duration: 0.4,
+      duration: 0.3,
       ease: "power2.out",
-      stagger: 0.06,
+      stagger: 0.03,
       scrollTrigger: {
         trigger: ".truth-section",
-        start: "top 75%",
+        start: "top 80%",
         toggleActions: "play none none none",
       }
     });
@@ -892,7 +901,7 @@ document.fonts.ready.then(() => {
 // ICON CONVERGENCE + ASSEMBLY TEXT
 // ═══════════════════════════════════
 const fragments = gsap.utils.toArray(".fragment");
-const fragSize = 48;
+let fragSize = isMobile ? 34 : 48;
 
 function getCenter() {
   const el = document.querySelector('.assembly-sticky');
@@ -902,41 +911,50 @@ function getCenter() {
 // Scatter using golden angle but clamp to viewport bounds
 const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
+// Cached scatter positions — computed once per layout so the kill-and-snap
+// step can restore the exact same coordinates without re-randomizing.
+let scatterPositions = [];
+
 function positionFragments() {
+  fragSize = window.innerWidth <= 768 ? 34 : 48;
   const container = document.querySelector('.assembly-sticky');
   const W = container.offsetWidth;
   const H = container.offsetHeight;
-  const pad = fragSize + 20; // safe margin from edges
+  const pad = fragSize + 20;
+  const jitter = window.innerWidth <= 768 ? 10 : 30;
+
+  scatterPositions = [];
 
   fragments.forEach((frag, i) => {
     const angle = goldenAngle * i;
-    // Normalize radius 0→1 using sqrt for even area distribution
     const t = (i + 0.5) / fragments.length;
     const r = Math.sqrt(t);
-    // Convert polar to cartesian, scaled to container with padding
     const halfW = (W - pad * 2) / 2;
     const halfH = (H - pad * 2) / 2;
-    const x = W / 2 + Math.cos(angle) * r * halfW + (Math.random() - 0.5) * 30;
-    const y = H / 2 + Math.sin(angle) * r * halfH + (Math.random() - 0.5) * 30;
-    // Clamp to safe bounds
+    const x = W / 2 + Math.cos(angle) * r * halfW + (Math.random() - 0.5) * jitter;
+    const y = H / 2 + Math.sin(angle) * r * halfH + (Math.random() - 0.5) * jitter;
     const cx = Math.max(pad, Math.min(W - pad, x));
     const cy = Math.max(pad, Math.min(H - pad, y));
+    const rot = (Math.random() - 0.5) * 20;
+
+    scatterPositions.push({ x: cx - fragSize / 2, y: cy - fragSize / 2, rotation: rot });
 
     gsap.set(frag, {
       x: cx - fragSize / 2,
       y: cy - fragSize / 2,
-      rotation: (Math.random() - 0.5) * 20,
+      rotation: rot,
       opacity: 0.9,
     });
   });
 }
 positionFragments();
 
-// Subtle floating drift
+// Subtle floating drift (smaller on mobile)
+const driftScale = isMobile ? 0.5 : 1;
 const floatingTweens = fragments.map((frag) => {
   return gsap.to(frag, {
-    y: `+=${6 + Math.random() * 10}`,
-    x: `+=${(Math.random() - 0.5) * 6}`,
+    y: `+=${(4 + Math.random() * 8) * driftScale}`,
+    x: `+=${(Math.random() - 0.5) * 6 * driftScale}`,
     rotation: `+=${(Math.random() - 0.5) * 3}`,
     duration: 2.5 + Math.random() * 2,
     ease: "sine.inOut",
@@ -947,12 +965,42 @@ const floatingTweens = fragments.map((frag) => {
 
 gsap.set("#assemblyText", { opacity: 0 });
 
-// Kill floating when scroll begins
+// Kill floating tweens before the convergence pin starts.
+//
+// FIX — three-part iOS Safari jitter patch:
+//
+// 1. Fire at "top bottom" (section enters viewport at all) instead of "top 80%".
+//    The pin starts at "top top" — on iOS with momentum scrolling the browser
+//    can jump past the old 80% threshold in a single frame, putting the kill
+//    and the first convergence scrub tick in the same RAF. By triggering at
+//    "top bottom" we guarantee a full viewport-height of scroll gap between
+//    killing the drift tweens and the scrub starting.
+//
+// 2. Wrap in gsap.delayedCall(0, …) so the kill and snap execute at the
+//    START of the next RAF frame, after the current frame finishes. This
+//    prevents the floating tween from writing one final relative delta in the
+//    same tick that the convergence timeline writes its first absolute value.
+//
+// 3. After killing, immediately gsap.set() every fragment back to its exact
+//    scatter position (stored in scatterPositions[]). The floating tweens use
+//    relative y/x (`+=`) so when killed mid-yoyo the element's _gsap cache
+//    holds a drifted offset. The convergence Phase 1 would interpolate *from*
+//    that drifted value — causing a visible starting-position jump. Snapping
+//    back to the canonical scatter position gives the convergence a clean,
+//    predictable start.
 ScrollTrigger.create({
   trigger: ".assembly-scroll",
-  start: "top 80%",
+  start: "top bottom",
   once: true,
-  onEnter: () => floatingTweens.forEach(tw => tw.kill()),
+  onEnter: () => {
+    gsap.delayedCall(0, () => {
+      floatingTweens.forEach(tw => tw.kill());
+      fragments.forEach((frag, i) => {
+        const pos = scatterPositions[i];
+        if (pos) gsap.set(frag, { x: pos.x, y: pos.y, rotation: pos.rotation });
+      });
+    });
+  },
 });
 
 // Main pinned scroll timeline
@@ -960,7 +1008,7 @@ const assemblyTl = gsap.timeline({
   scrollTrigger: {
     trigger: ".assembly-scroll",
     start: "top top",
-    end: () => `+=${window.innerHeight * 2.5}`,
+    end: () => `+=${window.innerHeight * (isMobile ? 2 : 2.5)}`,
     pin: ".assembly-sticky",
     pinSpacing: true,
     scrub: 1,
@@ -972,11 +1020,12 @@ const assemblyTl = gsap.timeline({
 fragments.forEach((frag, i) => {
   const c = getCenter();
   const angle = (Math.PI * 2 / fragments.length) * i;
-  const targetRadius = 50 + Math.random() * 30;
+  const targetRadius = isMobile ? 70 + Math.random() * 40 : 50 + Math.random() * 30;
+  const orbitScale = isMobile ? 0.65 : 0.8;
   assemblyTl.to(frag, {
     x: c.x + Math.cos(angle) * targetRadius - fragSize / 2,
     y: c.y + Math.sin(angle) * targetRadius - fragSize / 2,
-    rotation: 0, scale: 0.8,
+    rotation: 0, scale: orbitScale,
     backgroundColor: "#3D62A0",
     boxShadow: "0 2px 20px rgba(61, 98, 160, 0.25)",
     duration: 1.2, ease: "power2.inOut",
@@ -1007,10 +1056,18 @@ lines.forEach((line, i) => {
 });
 
 // Phase 4: Hold for reading
-assemblyTl.to({}, { duration: 1.5 });
+assemblyTl.to({}, { duration: isMobile ? 0.8 : 1.5 });
 
-// Recalculate on resize
-ScrollTrigger.addEventListener("refreshInit", positionFragments);
+// Recalculate scatter positions on resize — but only when the convergence timeline
+// is NOT active. If it fires mid-animation (e.g. from iOS address bar causing a
+// visualViewport resize → ScrollTrigger.refresh()), positionFragments() would snap
+// all icons back to scatter positions in one frame, causing a visible teleport jump.
+ScrollTrigger.addEventListener("refreshInit", () => {
+  const st = assemblyTl.scrollTrigger;
+  if (!st || !st.isActive) {
+    positionFragments();
+  }
+});
 
 // ═══════════════════════════════════
 // CONNECTION MERGED — word reveal
@@ -1056,34 +1113,20 @@ ScrollTrigger.create({
 });
 
 // ═══════════════════════════════════
-// CONNECTION FLOWER — slow petal drift
+// CONNECTION FLOWER — slow petal drift (desktop only)
 // ═══════════════════════════════════
-const connOuterPetals = gsap.utils.toArray("#genFlower .petal-outer");
-const connInnerPetals = gsap.utils.toArray("#genFlower .petal-inner");
-connOuterPetals.forEach((petal, i) => {
-  const baseRotation = parseFloat(petal.style.rotate);
-  gsap.to(petal, {
-    rotate: baseRotation + 8,
-    scale: 1.02,
-    duration: 4 + i * 0.3,
-    ease: "sine.inOut",
-    yoyo: true,
-    repeat: -1,
-    delay: i * 0.4,
+if (!isMobile) {
+  const connOuterPetals = gsap.utils.toArray("#genFlower .petal-outer");
+  const connInnerPetals = gsap.utils.toArray("#genFlower .petal-inner");
+  connOuterPetals.forEach((petal, i) => {
+    const baseRotation = parseFloat(petal.style.rotate);
+    gsap.to(petal, { rotate: baseRotation + 8, scale: 1.02, duration: 4 + i * 0.3, ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.4 });
   });
-});
-connInnerPetals.forEach((petal, i) => {
-  const baseRotation = parseFloat(petal.style.rotate);
-  gsap.to(petal, {
-    rotate: baseRotation - 6,
-    scale: 1.03,
-    duration: 3.5 + i * 0.25,
-    ease: "sine.inOut",
-    yoyo: true,
-    repeat: -1,
-    delay: i * 0.35,
+  connInnerPetals.forEach((petal, i) => {
+    const baseRotation = parseFloat(petal.style.rotate);
+    gsap.to(petal, { rotate: baseRotation - 6, scale: 1.03, duration: 3.5 + i * 0.25, ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.35 });
   });
-});
+}
 
 // ═══════════════════════════════════
 // CTA — clover + text scale up
@@ -1094,9 +1137,9 @@ gsap.to("#ctaGrow", {
 });
 
 // ═══════════════════════════════════
-// MAGNETIC EFFECT — CTA + nav link
+// MAGNETIC EFFECT — CTA + nav link (desktop only)
 // ═══════════════════════════════════
-document.querySelectorAll(".nav-connect, #ctaGrow").forEach((el) => {
+if (!isMobile) document.querySelectorAll(".nav-connect, #ctaGrow").forEach((el) => {
   const strength = el.id === "ctaGrow" ? 0.2 : 0.4;
   const ease = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" });
   const easeY = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" });
@@ -1131,7 +1174,7 @@ ctaGrow.addEventListener("click", (e) => {
   ctaText.innerHTML = 'leave us your email';
   ctaForm.classList.add("visible");
   gsap.fromTo(ctaForm, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" });
-  setTimeout(() => ctaEmail.focus(), 300);
+  ctaEmail.focus();
 });
 
 // Collapse back to button on mouseleave (only if input is empty)
@@ -1150,6 +1193,24 @@ ctaGrow.addEventListener("mouseleave", () => {
     }
   });
 });
+
+// Touch dismissal — collapse CTA when tapping outside on mobile
+document.addEventListener("touchstart", (e) => {
+  if (!ctaGrow.classList.contains("expanded") || ctaGrow.classList.contains("done")) return;
+  if (ctaGrow.contains(e.target)) return;
+  if (ctaEmail.value.trim()) return;
+  gsap.to(ctaForm, {
+    opacity: 0, duration: 0.25, ease: "power2.in",
+    onComplete: () => {
+      ctaForm.classList.remove("visible");
+      ctaGrow.classList.remove("expanded");
+      ctaText.innerHTML = '<span class="accent-teal">grow</span> <span class="cta-with">with us</span>';
+      ctaEmail.value = "";
+      ctaEmail.style.borderBottomColor = "";
+      gsap.set(ctaForm, { clearProps: "opacity,x" });
+    }
+  });
+}, { passive: true });
 
 ctaForm.addEventListener("submit", (e) => {
   e.preventDefault();
